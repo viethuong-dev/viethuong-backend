@@ -2,7 +2,7 @@ import { hashSync, compareSync, genSaltSync } from 'bcrypt';
 import { Injectable, Logger } from '@nestjs/common';
 import { User } from './User';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, UpdateQuery } from 'mongoose';
+import { FilterQuery, Model, UpdateQuery } from 'mongoose';
 import { CreateUserDTO } from 'src/api/user/user.dto';
 import { Role } from 'src/constants/role.enum';
 import { USER_STATUS } from 'src/constants/userstatus.enum';
@@ -64,7 +64,19 @@ export class UserService {
     await this.updateUser(userId, { salt: salt, hashed_password: hashedPassword });
   }
 
-  async findUsers(status: USER_STATUS): Promise<User[]> {
-    return this.userModel.find({ status });
+  async findUsers(offset: number, limit: number, status: USER_STATUS): Promise<User[]> {
+    const query: FilterQuery<User> = {};
+    if (status) {
+      query.status = status;
+    }
+    return this.userModel.find(query).skip(offset).limit(limit);
+  }
+
+  async countUsers(status: USER_STATUS): Promise<number> {
+    const query: FilterQuery<User> = {};
+    if (status) {
+      query.status = status;
+    }
+    return this.userModel.count(query);
   }
 }

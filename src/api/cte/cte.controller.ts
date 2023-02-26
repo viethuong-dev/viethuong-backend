@@ -1,7 +1,9 @@
 import { Controller, Get } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { RoleInfo } from 'src/constants/role.enum';
 import { UserStatusInfo } from 'src/constants/userstatus.enum';
 
+@ApiTags('cte')
 @Controller('cte')
 export class ConstantController {
   @Get('roles')
@@ -9,7 +11,7 @@ export class ConstantController {
     return RoleInfo;
   }
 
-  @Get('user_status')
+  @Get('user-status')
   async getCteUserStatus() {
     return UserStatusInfo;
   }
