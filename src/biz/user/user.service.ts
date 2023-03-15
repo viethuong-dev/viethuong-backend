@@ -28,10 +28,14 @@ export class UserService {
     return hashSync(password, salt);
   }
 
-  async validatePassword(username: string, password: string): Promise<User | Error> {
+  async validatePassword(
+    username: string,
+    password: string,
+  ): Promise<User | Error> {
     const user = await this.findByUsername(username);
     if (!user) return new Error('user not found');
-    if (user.status !== USER_STATUS.ACTIVATED) return new Error('user is not activated');
+    if (user.status !== USER_STATUS.ACTIVATED)
+      return new Error('user is not activated');
     const isMatch = compareSync(password, user.hashed_password);
     if (!isMatch) return new Error('Password is incorrect');
     return user;
@@ -51,7 +55,10 @@ export class UserService {
     return this.userModel.create(user);
   }
 
-  async updateUser(userId: string, updateQuery: UpdateQuery<User>): Promise<User> {
+  async updateUser(
+    userId: string,
+    updateQuery: UpdateQuery<User>,
+  ): Promise<User> {
     return this.userModel.findByIdAndUpdate(userId, updateQuery, { new: true });
   }
 
@@ -61,10 +68,17 @@ export class UserService {
     console.log(password);
 
     const hashedPassword = this.hashPassword(password, salt);
-    await this.updateUser(userId, { salt: salt, hashed_password: hashedPassword });
+    await this.updateUser(userId, {
+      salt: salt,
+      hashed_password: hashedPassword,
+    });
   }
 
-  async findUsers(offset: number, limit: number, status: USER_STATUS): Promise<User[]> {
+  async findUsers(
+    offset: number,
+    limit: number,
+    status: USER_STATUS,
+  ): Promise<User[]> {
     const query: FilterQuery<User> = {};
     if (status) {
       query.status = status;

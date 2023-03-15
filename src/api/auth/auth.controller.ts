@@ -1,4 +1,12 @@
-import { Body, Controller, ForbiddenException, Get, Post, UnauthorizedException, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  ForbiddenException,
+  Get,
+  Post,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Payload } from 'src/biz/auth/Payload';
 import { Token } from 'src/biz/auth/Token';
@@ -11,7 +19,10 @@ import { LoginDTO, RefreshTokenDTO } from './auth.dto';
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private userService: UserService, private authService: AuthService) {}
+  constructor(
+    private userService: UserService,
+    private authService: AuthService,
+  ) {}
 
   @Post('/login')
   @ApiOkResponse({
@@ -26,7 +37,10 @@ export class AuthController {
       throw new UnauthorizedException(user.message);
     }
     const token = await this.authService.generateToken(user);
-    await this.authService.createUserRefreshToken(token.refresh_token, user._id);
+    await this.authService.createUserRefreshToken(
+      token.refresh_token,
+      user._id,
+    );
     return token;
   }
 
@@ -38,7 +52,9 @@ export class AuthController {
   async refreshToken(@Body() body: RefreshTokenDTO) {
     const refreshToken = body.refresh_token;
     const payload = this.authService.verifyRefreshToken(refreshToken);
-    const savedUserRefreshToken = await this.authService.getUserRefreshToken(refreshToken);
+    const savedUserRefreshToken = await this.authService.getUserRefreshToken(
+      refreshToken,
+    );
     if (!savedUserRefreshToken) {
       throw new ForbiddenException('refresh_token not found');
     }
@@ -50,8 +66,13 @@ export class AuthController {
   @UseGuards(AuthGuard)
   async logout(@AuthUser() authUser: Payload, @Body() body: RefreshTokenDTO) {
     const refreshToken = body.refresh_token;
-    const savedUserRefreshToken = await this.authService.getUserRefreshToken(refreshToken);
-    if (!savedUserRefreshToken || savedUserRefreshToken.user_id.toHexString() !== authUser.userid) {
+    const savedUserRefreshToken = await this.authService.getUserRefreshToken(
+      refreshToken,
+    );
+    if (
+      !savedUserRefreshToken ||
+      savedUserRefreshToken.user_id.toHexString() !== authUser.userid
+    ) {
       throw new ForbiddenException('refresh_token not found');
     }
     await this.authService.deleteRefreshToken(refreshToken);

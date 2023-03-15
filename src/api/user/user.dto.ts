@@ -60,6 +60,7 @@ export class UserDTO {
 
 export class UsersDTO {
   users: UserDTO[];
+
   @ApiResponseProperty()
   total: number;
 }

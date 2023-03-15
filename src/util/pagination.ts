@@ -12,6 +12,18 @@ export class PaginationQuery {
     required: false,
   })
   limit: number;
+
+  @ApiProperty({
+    default: null,
+    required: false,
+  })
+  sort: string;
+
+  @ApiProperty({
+    default: null,
+    required: false,
+  })
+  order: string;
 }
 
 export class PaginationKeySeachQuery {
@@ -31,5 +43,17 @@ export class PaginationKeySeachQuery {
     default: null,
     required: false,
   })
-  key_search: string;
+  sort: string;
+
+  @ApiProperty({
+    default: null,
+    required: false,
+  })
+  order: string;
+
+  @ApiProperty({
+    default: null,
+    required: false,
+  })
+  search: string;
 }

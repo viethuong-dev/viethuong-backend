@@ -1,5 +1,24 @@
-import { BadRequestException, Body, Controller, Get, NotFoundException, Param, Post, Query, UseGuards } from '@nestjs/common';
-import { CreateUserDTO, ResetPasswordDTO, UpdateUserDTO, UserActionDTO, UserDTO, UsersDTO, tranformUserModelToDTO } from './user.dto';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  CreateUserDTO,
+  ResetPasswordDTO,
+  UpdateUserDTO,
+  UserActionDTO,
+  UserDTO,
+  UsersDTO,
+  tranformUserModelToDTO,
+} from './user.dto';
 import { AuthUser } from 'src/decorators/authuser.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { UserService } from 'src/biz/user/user.service';
@@ -16,7 +35,10 @@ import { PaginationQuery } from 'src/util/pagination';
 @Controller('user')
 @UseGuards(AuthGuard, RolesGuard)
 export class UserController {
-  constructor(private userService: UserService, private authService: AuthService) {}
+  constructor(
+    private userService: UserService,
+    private authService: AuthService,
+  ) {}
 
   @ApiOkResponse({
     type: UserDTO,
@@ -25,7 +47,9 @@ export class UserController {
   @Post('/create')
   @Roles(Role.ADMIN)
   async createUser(@Body() createUserDto: CreateUserDTO) {
-    const existedUser = await this.userService.findByUsername(createUserDto.username);
+    const existedUser = await this.userService.findByUsername(
+      createUserDto.username,
+    );
     if (existedUser) {
       throw new BadRequestException('username existed');
     }
@@ -40,10 +64,16 @@ export class UserController {
   })
   @Get('/')
   @Roles(Role.ADMIN)
-  async getUsers(@Query() paginationQuery: PaginationQuery, @Query('status') status?: USER_STATUS) {
+  async getUsers(
+    @Query() paginationQuery: PaginationQuery,
+    @Query('status') status?: USER_STATUS,
+  ) {
     const offset = paginationQuery.offset || 0;
     const limit = paginationQuery.limit || 20;
-    const [users, total] = await Promise.all([this.userService.findUsers(offset, limit, status), this.userService.countUsers(status)]);
+    const [users, total] = await Promise.all([
+      this.userService.findUsers(offset, limit, status),
+      this.userService.countUsers(status),
+    ]);
     const userDtos = users.map((user) => tranformUserModelToDTO(user));
     return {
       users: userDtos,
@@ -83,7 +113,10 @@ export class UserController {
   })
   @Post('/:userid/action')
   @Roles(Role.ADMIN)
-  async changeUserStatus(@Body() userActionDTO: UserActionDTO, @Param('userid') userid: string) {
+  async changeUserStatus(
+    @Body() userActionDTO: UserActionDTO,
+    @Param('userid') userid: string,
+  ) {
     const existedUser = await this.userService.findById(userid);
     if (!existedUser) {
       throw new NotFoundException('user not found');
@@ -96,7 +129,9 @@ export class UserController {
     if (newStatus === USER_STATUS.DEACTIVATED) {
       await this.authService.deleteAllRefreshTokenByUserId(userid);
     }
-    const updatedUser = await this.userService.updateUser(userid, { status: newStatus });
+    const updatedUser = await this.userService.updateUser(userid, {
+      status: newStatus,
+    });
     return tranformUserModelToDTO(updatedUser);
   }
 
@@ -104,20 +139,29 @@ export class UserController {
     type: UserDTO,
     isArray: false,
   })
-  @Post('/:userid/update')
+  @Put('/:userid')
   @Roles(Role.ADMIN)
-  async updateUserInfo(@Body() updateUserDTO: UpdateUserDTO, @Param('userid') userid: string) {
+  async updateUserInfo(
+    @Body() updateUserDTO: UpdateUserDTO,
+    @Param('userid') userid: string,
+  ) {
     const existedUser = await this.userService.findById(userid);
     if (!existedUser) {
       throw new NotFoundException('user not found');
     }
-    const updatedUser = await this.userService.updateUser(userid, updateUserDTO);
+    const updatedUser = await this.userService.updateUser(
+      userid,
+      updateUserDTO,
+    );
     return tranformUserModelToDTO(updatedUser);
   }
 
   @Post('/:userid/reset-password')
   @UseGuards(AuthGuard)
-  async resetPassword(@Body() body: ResetPasswordDTO, @Param('userid') userid: string) {
+  async resetPassword(
+    @Body() body: ResetPasswordDTO,
+    @Param('userid') userid: string,
+  ) {
     const existedUser = await this.userService.findById(userid);
     if (!existedUser) {
       throw new NotFoundException('user not found');
