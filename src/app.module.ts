@@ -12,44 +12,44 @@ import { JwtModule } from '@nestjs/jwt';
 import { RolesGuard } from './guards/roles.guard';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MONGODB_URI, {
-      dbName: 'viethuong-dev',
-      user: 'user1',
-      pass: 'my-secret-pw',
-      w: 'majority',
-      ssl: true,
-      retryWrites: true,
-      connectionFactory: (connection) => {
-        connection.on('connected', () => {
-          console.log('DB connected');
-        });
-        connection.on('disconnected', () => {
-          console.log('DB disconnected');
-        });
-        connection.on('error', (error) => {
-          console.log('DB connection failed! for error: ', error);
-        });
-        return connection;
-      },
-    }),
-    // JwtModule,
-    LoggerModule,
-    BizModule,
-    ApiModule,
-  ],
-  controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: APP_FILTER,
-      useClass: AllExceptionFilter,
-    },
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: RolesGuard,
-    // },
-  ],
+    imports: [
+        ConfigModule.forRoot(),
+        MongooseModule.forRoot(process.env.MONGODB_URI, {
+            dbName: 'viethuong-dev',
+            user: 'user1',
+            pass: 'my-secret-pw',
+            w: 'majority',
+            ssl: true,
+            retryWrites: true,
+            connectionFactory: (connection) => {
+                connection.on('connected', () => {
+                    console.log('DB connected');
+                });
+                connection.on('disconnected', () => {
+                    console.log('DB disconnected');
+                });
+                connection.on('error', (error) => {
+                    console.log('DB connection failed! for error: ', error);
+                });
+                return connection;
+            },
+        }),
+        // JwtModule,
+        LoggerModule,
+        BizModule,
+        ApiModule,
+    ],
+    controllers: [AppController],
+    providers: [
+        AppService,
+        {
+            provide: APP_FILTER,
+            useClass: AllExceptionFilter,
+        },
+        // {
+        //   provide: APP_GUARD,
+        //   useClass: RolesGuard,
+        // },
+    ],
 })
 export class AppModule {}

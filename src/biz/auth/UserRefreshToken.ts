@@ -3,12 +3,13 @@ import { Types } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class UserRefreshToken {
-  @Prop()
-  user_id: Types.ObjectId;
-  @Prop()
-  refresh_token: string;
-  @Prop()
-  expired_at: Date;
+    @Prop()
+    user_id: Types.ObjectId;
+    @Prop()
+    refresh_token: string;
+    @Prop()
+    expired_at: Date;
 }
 
-export const UserRefreshTokenSchema = SchemaFactory.createForClass(UserRefreshToken);
+export const UserRefreshTokenSchema =
+    SchemaFactory.createForClass(UserRefreshToken);

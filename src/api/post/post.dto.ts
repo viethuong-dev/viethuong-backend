@@ -16,9 +16,9 @@ import { PostTranslation, PostTranslationContent } from 'src/biz/post/Post';
 // }
 
 export class createPostDTO {
-  @ApiProperty()
-  @ValidateNested()
-  @IsNotEmpty()
-  @Type(() => PostTranslation)
-  translation: PostTranslation;
+    @ApiProperty()
+    @ValidateNested()
+    @IsNotEmpty()
+    @Type(() => PostTranslation)
+    translation: PostTranslation;
 }

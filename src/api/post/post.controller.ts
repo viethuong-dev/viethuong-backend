@@ -1,14 +1,14 @@
 import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  NotFoundException,
-  Param,
-  Post,
-  Put,
-  Query,
-  UseGuards,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    NotFoundException,
+    Param,
+    Post,
+    Put,
+    Query,
+    UseGuards,
 } from '@nestjs/common';
 import { Role } from 'src/constants/role.enum';
 import { Roles } from 'src/decorators/roles.decorator';
@@ -24,70 +24,70 @@ import { Post as PostModel } from 'src/biz/post/Post';
 @Controller('post')
 @UseGuards(AuthGuard, RolesGuard)
 export class PostController {
-  constructor(private postService: PostService) {}
+    constructor(private postService: PostService) {}
 
-  @ApiOkResponse({
-    type: PostModel,
-    isArray: false,
-  })
-  @Post('/')
-  @Roles(Role.ADMIN, Role.CONTENT_STAFF)
-  async createPost(@Body() createPostDto: createPostDTO) {
-    const post = await this.postService.createPost(createPostDto);
-    return post;
-  }
-
-  @ApiOkResponse({
-    type: PostModel,
-    isArray: true,
-  })
-  @Get('/')
-  @Roles(Role.ADMIN, Role.CONTENT_STAFF)
-  async getPosts(@Query() pagQuery: PaginationKeySeachQuery) {
-    pagQuery.offset = pagQuery.offset || 0;
-    pagQuery.limit = pagQuery.limit || 20;
-    const [posts, total] = await this.postService.getAndCountPost(pagQuery);
-    return { posts, total };
-  }
-
-  @ApiOkResponse({
-    type: PostModel,
-    isArray: false,
-  })
-  @Get('/:id')
-  @Roles(Role.ADMIN, Role.CONTENT_STAFF)
-  async getPost(@Param('id') postId: string) {
-    const post = await this.postService.findById(postId);
-    if (!post) {
-      throw new NotFoundException('post not found');
+    @ApiOkResponse({
+        type: PostModel,
+        isArray: false,
+    })
+    @Post('/')
+    @Roles(Role.ADMIN, Role.CONTENT_STAFF)
+    async createPost(@Body() createPostDto: createPostDTO) {
+        const post = await this.postService.createPost(createPostDto);
+        return post;
     }
-    return post;
-  }
 
-  @ApiOkResponse({
-    type: PostModel,
-    isArray: false,
-  })
-  @Put('/:id')
-  @Roles(Role.ADMIN, Role.CONTENT_STAFF)
-  async updatePost(
-    @Param('id') postId: string,
-    @Body() updatePostDTO: createPostDTO,
-  ) {
-    const existedPost = await this.postService.findById(postId);
-    if (!existedPost) {
-      throw new NotFoundException('post not found');
+    @ApiOkResponse({
+        type: PostModel,
+        isArray: true,
+    })
+    @Get('/')
+    @Roles(Role.ADMIN, Role.CONTENT_STAFF)
+    async getPosts(@Query() pagQuery: PaginationKeySeachQuery) {
+        pagQuery.offset = pagQuery.offset || 0;
+        pagQuery.limit = pagQuery.limit || 20;
+        const [posts, total] = await this.postService.getAndCountPost(pagQuery);
+        return { posts, total };
     }
-    return this.postService.updatePost(postId, updatePostDTO);
-  }
 
-  @Delete('/:id')
-  @Roles(Role.ADMIN, Role.CONTENT_STAFF)
-  async deletePost(@Param('id') postId: string) {
-    const existedPost = await this.postService.findById(postId);
-    if (!existedPost) {
-      throw new NotFoundException('post not found');
+    @ApiOkResponse({
+        type: PostModel,
+        isArray: false,
+    })
+    @Get('/:id')
+    @Roles(Role.ADMIN, Role.CONTENT_STAFF)
+    async getPost(@Param('id') postId: string) {
+        const post = await this.postService.findById(postId);
+        if (!post) {
+            throw new NotFoundException('post not found');
+        }
+        return post;
     }
-    return this.postService.deletePost(postId);
-  }
+
+    @ApiOkResponse({
+        type: PostModel,
+        isArray: false,
+    })
+    @Put('/:id')
+    @Roles(Role.ADMIN, Role.CONTENT_STAFF)
+    async updatePost(
+        @Param('id') postId: string,
+        @Body() updatePostDTO: createPostDTO,
+    ) {
+        const existedPost = await this.postService.findById(postId);
+        if (!existedPost) {
+            throw new NotFoundException('post not found');
+        }
+        return this.postService.updatePost(postId, updatePostDTO);
+    }
+
+    @Delete('/:id')
+    @Roles(Role.ADMIN, Role.CONTENT_STAFF)
+    async deletePost(@Param('id') postId: string) {
+        const existedPost = await this.postService.findById(postId);
+        if (!existedPost) {
+            throw new NotFoundException('post not found');
+        }
+        return this.postService.deletePost(postId);
+    }
 }

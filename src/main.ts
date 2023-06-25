@@ -6,17 +6,17 @@ import { createSwaggerConfig } from './swagger/swagger';
 import mongoose from 'mongoose';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    bufferLogs: true,
-    cors: true,
-  });
+    const app = await NestFactory.create(AppModule, {
+        bufferLogs: true,
+        cors: true,
+    });
 
-  app.useGlobalPipes(new ValidationPipe());
-  mongoose.set('debug', true);
-  const swaggerConfig = createSwaggerConfig();
-  const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('docs', app, document);
+    app.useGlobalPipes(new ValidationPipe());
+    mongoose.set('debug', true);
+    const swaggerConfig = createSwaggerConfig();
+    const document = SwaggerModule.createDocument(app, swaggerConfig);
+    SwaggerModule.setup('docs', app, document);
 
-  await app.listen(3000);
+    await app.listen(3000);
 }
 bootstrap();

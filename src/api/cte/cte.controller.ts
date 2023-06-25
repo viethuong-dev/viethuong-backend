@@ -6,13 +6,13 @@ import { UserStatusInfo } from 'src/constants/userstatus.enum';
 @ApiTags('cte')
 @Controller('cte')
 export class ConstantController {
-  @Get('roles')
-  async getCteUserRoles() {
-    return RoleInfo;
-  }
+    @Get('roles')
+    async getCteUserRoles() {
+        return RoleInfo;
+    }
 
-  @Get('user-status')
-  async getCteUserStatus() {
-    return UserStatusInfo;
-  }
+    @Get('user-status')
+    async getCteUserStatus() {
+        return UserStatusInfo;
+    }
 }

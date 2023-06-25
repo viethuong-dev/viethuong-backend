@@ -5,86 +5,86 @@ import { USER_STATUS } from 'src/constants/userstatus.enum';
 import { ApiProperty, ApiResponseProperty } from '@nestjs/swagger';
 
 export class CreateUserDTO {
-  @ApiProperty()
-  @IsNotEmpty()
-  username: string;
+    @ApiProperty()
+    @IsNotEmpty()
+    username: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
-  fullname: string;
+    @ApiProperty()
+    @IsNotEmpty()
+    fullname: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
-  password: string;
+    @ApiProperty()
+    @IsNotEmpty()
+    password: string;
 
-  @ApiProperty()
-  @IsEnum(Role, { each: true })
-  @IsNotEmpty()
-  roles: Role[];
+    @ApiProperty()
+    @IsEnum(Role, { each: true })
+    @IsNotEmpty()
+    roles: Role[];
 }
 
 export class UpdateUserDTO {
-  @ApiProperty()
-  @IsNotEmpty()
-  username: string;
+    @ApiProperty()
+    @IsNotEmpty()
+    username: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
-  fullname: string;
+    @ApiProperty()
+    @IsNotEmpty()
+    fullname: string;
 
-  @ApiProperty()
-  @IsEnum(Role, { each: true })
-  @IsNotEmpty()
-  roles: Role[];
+    @ApiProperty()
+    @IsEnum(Role, { each: true })
+    @IsNotEmpty()
+    roles: Role[];
 }
 
 export class UserDTO {
-  @ApiResponseProperty()
-  user_id: string;
+    @ApiResponseProperty()
+    user_id: string;
 
-  @ApiResponseProperty()
-  username: string;
+    @ApiResponseProperty()
+    username: string;
 
-  @ApiResponseProperty()
-  fullname: string;
+    @ApiResponseProperty()
+    fullname: string;
 
-  @ApiResponseProperty()
-  created_at?: Date;
+    @ApiResponseProperty()
+    created_at?: Date;
 
-  @ApiResponseProperty()
-  roles: Role[];
+    @ApiResponseProperty()
+    roles: Role[];
 
-  @ApiResponseProperty()
-  status: USER_STATUS;
+    @ApiResponseProperty()
+    status: USER_STATUS;
 }
 
 export class UsersDTO {
-  users: UserDTO[];
+    users: UserDTO[];
 
-  @ApiResponseProperty()
-  total: number;
+    @ApiResponseProperty()
+    total: number;
 }
 
 export class UserActionDTO {
-  @ApiProperty()
-  @IsNotEmpty()
-  status: USER_STATUS;
+    @ApiProperty()
+    @IsNotEmpty()
+    status: USER_STATUS;
 }
 
 export class ResetPasswordDTO {
-  @ApiProperty()
-  @IsNotEmpty()
-  password: string;
+    @ApiProperty()
+    @IsNotEmpty()
+    password: string;
 }
 
 export function tranformUserModelToDTO(userModel: User): UserDTO {
-  const userDTO: UserDTO = {
-    user_id: userModel._id.toHexString(),
-    username: userModel.username,
-    fullname: userModel.fullname,
-    created_at: userModel.createdAt,
-    roles: userModel.roles,
-    status: userModel.status,
-  };
-  return userDTO;
+    const userDTO: UserDTO = {
+        user_id: userModel._id.toHexString(),
+        username: userModel.username,
+        fullname: userModel.fullname,
+        created_at: userModel.createdAt,
+        roles: userModel.roles,
+        status: userModel.status,
+    };
+    return userDTO;
 }
