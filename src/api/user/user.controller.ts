@@ -44,7 +44,7 @@ export class UserController {
         type: UserDTO,
         isArray: false,
     })
-    @Post('/create')
+    @Post('/')
     @Roles(Role.ADMIN)
     async createUser(@Body() createUserDto: CreateUserDTO) {
         const existedUser = await this.userService.findByUsername(

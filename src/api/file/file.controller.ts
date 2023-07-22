@@ -12,12 +12,12 @@ import { ApiTags } from '@nestjs/swagger';
 import { UploadApiErrorResponse, UploadApiResponse } from 'cloudinary';
 import { CloudinaryService } from 'src/biz/file/cloudinary.service';
 
-@ApiTags('post')
+@ApiTags('file')
 @Controller('file')
 export class FileController {
     constructor(private fileService: CloudinaryService) {}
 
-    @Post('upload')
+    @Post('/')
     @UseInterceptors(FileInterceptor('file'))
     async uploadFile(
         @UploadedFile(
