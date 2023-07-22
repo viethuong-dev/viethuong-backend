@@ -8,7 +8,6 @@ import {
     Post,
     Put,
     Query,
-    UseGuards,
 } from '@nestjs/common';
 import {
     CreateUserDTO,
@@ -20,12 +19,10 @@ import {
     tranformUserModelToDTO,
 } from './user.dto';
 import { AuthUser } from 'src/decorators/authuser.decorator';
-import { AuthGuard } from 'src/guards/auth.guard';
 import { UserService } from 'src/biz/user/user.service';
 import { Payload } from 'src/biz/auth/Payload';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/constants/role.enum';
-import { RolesGuard } from 'src/guards/roles.guard';
 import { USER_STATUS } from 'src/constants/userstatus.enum';
 import { AuthService } from 'src/biz/auth/auth.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
@@ -33,7 +30,6 @@ import { PaginationQuery } from 'src/util/pagination';
 
 @ApiTags('user')
 @Controller('user')
-@UseGuards(AuthGuard, RolesGuard)
 export class UserController {
     constructor(
         private userService: UserService,
@@ -86,7 +82,6 @@ export class UserController {
         isArray: false,
     })
     @Get('/me')
-    @UseGuards(AuthGuard)
     async getProfile(@AuthUser() authUser: Payload) {
         const user = await this.userService.findByUsername(authUser.username);
         return tranformUserModelToDTO(user);
@@ -157,7 +152,6 @@ export class UserController {
     }
 
     @Post('/:userid/reset-password')
-    @UseGuards(AuthGuard)
     async resetPassword(
         @Body() body: ResetPasswordDTO,
         @Param('userid') userid: string,

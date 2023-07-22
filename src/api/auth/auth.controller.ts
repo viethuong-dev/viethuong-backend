@@ -2,10 +2,8 @@ import {
     Body,
     Controller,
     ForbiddenException,
-    Get,
     Post,
     UnauthorizedException,
-    UseGuards,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Payload } from 'src/biz/auth/Payload';
@@ -13,7 +11,6 @@ import { Token } from 'src/biz/auth/Token';
 import { AuthService } from 'src/biz/auth/auth.service';
 import { UserService } from 'src/biz/user/user.service';
 import { AuthUser } from 'src/decorators/authuser.decorator';
-import { AuthGuard } from 'src/guards/auth.guard';
 import { LoginDTO, RefreshTokenDTO } from './auth.dto';
 import { tranformUserModelToDTO } from '../user/user.dto';
 
@@ -69,7 +66,6 @@ export class AuthController {
     }
 
     @Post('/logout')
-    @UseGuards(AuthGuard)
     async logout(@AuthUser() authUser: Payload, @Body() body: RefreshTokenDTO) {
         const refreshToken = body.refresh_token;
         const savedUserRefreshToken =

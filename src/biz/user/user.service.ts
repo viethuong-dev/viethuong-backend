@@ -1,10 +1,9 @@
 import { hashSync, compareSync, genSaltSync } from 'bcrypt';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { User } from './User';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model, UpdateQuery } from 'mongoose';
 import { CreateUserDTO } from 'src/api/user/user.dto';
-import { Role } from 'src/constants/role.enum';
 import { USER_STATUS } from 'src/constants/userstatus.enum';
 
 @Injectable()

@@ -8,21 +8,18 @@ import {
     Post,
     Put,
     Query,
-    UseGuards,
 } from '@nestjs/common';
 import { Role } from 'src/constants/role.enum';
 import { Roles } from 'src/decorators/roles.decorator';
 import { createPostDTO } from './post.dto';
 import { PostService } from 'src/biz/post/post.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/guards/auth.guard';
-import { RolesGuard } from 'src/guards/roles.guard';
-import { PaginationKeySeachQuery, PaginationQuery } from 'src/util/pagination';
+import { PaginationKeySeachQuery } from 'src/util/pagination';
 import { Post as PostModel } from 'src/biz/post/Post';
+import { Public } from 'src/guards/base.guard';
 
 @ApiTags('post')
 @Controller('post')
-@UseGuards(AuthGuard, RolesGuard)
 export class PostController {
     constructor(private postService: PostService) {}
 
@@ -41,8 +38,8 @@ export class PostController {
         type: PostModel,
         isArray: true,
     })
+    @Public()
     @Get('/')
-    @Roles(Role.ADMIN, Role.CONTENT_STAFF)
     async getPosts(@Query() pagQuery: PaginationKeySeachQuery) {
         pagQuery.offset = pagQuery.offset || 0;
         pagQuery.limit = pagQuery.limit || 20;
@@ -54,8 +51,8 @@ export class PostController {
         type: PostModel,
         isArray: false,
     })
+    @Public()
     @Get('/:id')
-    @Roles(Role.ADMIN, Role.CONTENT_STAFF)
     async getPost(@Param('id') postId: string) {
         const post = await this.postService.findById(postId);
         if (!post) {

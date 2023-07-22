@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsNotEmpty, ValidateNested } from 'class-validator';
-import { PostTranslation, PostTranslationContent } from 'src/biz/post/Post';
+import { PostTranslation } from 'src/biz/post/Post';
 
 // export class PostTranslationDTO {
 //   @ValidateNested()

@@ -8,8 +8,8 @@ import { AllExceptionFilter } from './filter/exception.filter';
 import { LoggerModule } from './logger/logger.module';
 import { BizModule } from './biz/biz.module';
 import { ApiModule } from './api/api.module';
-import { JwtModule } from '@nestjs/jwt';
 import { RolesGuard } from './guards/roles.guard';
+import { AuthGuard } from './guards/auth.guard';
 
 @Module({
     imports: [
@@ -46,10 +46,14 @@ import { RolesGuard } from './guards/roles.guard';
             provide: APP_FILTER,
             useClass: AllExceptionFilter,
         },
-        // {
-        //   provide: APP_GUARD,
-        //   useClass: RolesGuard,
-        // },
+        {
+            provide: APP_GUARD,
+            useClass: AuthGuard,
+        },
+        {
+            provide: APP_GUARD,
+            useClass: RolesGuard,
+        },
     ],
 })
 export class AppModule {}
