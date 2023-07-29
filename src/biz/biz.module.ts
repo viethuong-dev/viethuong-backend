@@ -10,8 +10,6 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { PostService } from './post/post.service';
 import { Post, PostSchema } from './post/Post';
-import { ProductService } from './product/product.service';
-import { Product, ProductSchema } from './product/Product';
 import { CloudinaryService } from './file/cloudinary.service';
 import { CloudinaryProvider } from './file/cloudinary.provider';
 
@@ -21,14 +19,12 @@ const dbModules = [
         { name: UserRefreshToken.name, schema: UserRefreshTokenSchema },
     ]),
     MongooseModule.forFeature([{ name: Post.name, schema: PostSchema }]),
-    MongooseModule.forFeature([{ name: Product.name, schema: ProductSchema }]),
 ];
 const services = [
     UserService,
     AuthService,
     JwtService,
     PostService,
-    ProductService,
     CloudinaryService,
     CloudinaryProvider,
 ];
