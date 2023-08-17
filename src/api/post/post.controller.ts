@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { Role } from 'src/constants/role.enum';
 import { Roles } from 'src/decorators/roles.decorator';
-import { createPostDTO } from './post.dto';
 import { PostService } from 'src/biz/post/post.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { PaginationKeySeachQuery } from 'src/util/pagination';
@@ -29,9 +28,8 @@ export class PostController {
     })
     @Post('/')
     @Roles(Role.ADMIN, Role.CONTENT_STAFF)
-    async createPost(@Body() createPostDto: createPostDTO) {
-        const post = await this.postService.createPost(createPostDto);
-        return post;
+    async createPost(@Body() post: PostModel) {
+        return this.postService.createPost(post);
     }
 
     @ApiOkResponse({
@@ -67,15 +65,12 @@ export class PostController {
     })
     @Put('/:id')
     @Roles(Role.ADMIN, Role.CONTENT_STAFF)
-    async updatePost(
-        @Param('id') postId: string,
-        @Body() updatePostDTO: createPostDTO,
-    ) {
+    async updatePost(@Param('id') postId: string, @Body() post: PostModel) {
         const existedPost = await this.postService.findById(postId);
         if (!existedPost) {
             throw new NotFoundException('post not found');
         }
-        return this.postService.updatePost(postId, updatePostDTO);
+        return this.postService.updatePost(postId, post);
     }
 
     @Delete('/:id')

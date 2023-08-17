@@ -2,24 +2,25 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post } from './Post';
 import { Model, SortOrder } from 'mongoose';
-import { createPostDTO } from 'src/api/post/post.dto';
 import { PaginationKeySeachQuery } from 'src/util/pagination';
+import { build_search_object_in_translation } from 'src/util/helper';
 
 @Injectable()
 export class PostService {
     constructor(@InjectModel(Post.name) private postModel: Model<Post>) {}
 
-    async createPost(createPostDTO: createPostDTO) {
-        return this.postModel.create(createPostDTO);
+    async createPost(post: Post) {
+        return this.postModel.create(post);
     }
 
     async getAndCountPost(reqQuery: PaginationKeySeachQuery) {
-        const options = {
-            $or: [
-                { title: new RegExp(reqQuery.search, 'i') },
-                { content: new RegExp(reqQuery.search, 'i') },
-            ],
-        };
+        let options = {};
+        if (reqQuery.search) {
+            options = build_search_object_in_translation(reqQuery.search, [
+                'title',
+                'content',
+            ]);
+        }
         const dbQuery = this.postModel.find(options);
         if (reqQuery.sort) {
             const sortOrder: SortOrder = reqQuery.order === 'asc' ? 1 : -1;
@@ -42,8 +43,8 @@ export class PostService {
         }
     }
 
-    async updatePost(id: string, updateDTO: createPostDTO): Promise<Post> {
-        return this.postModel.findByIdAndUpdate(id, updateDTO, { new: true });
+    async updatePost(id: string, post: Post): Promise<Post> {
+        return this.postModel.findByIdAndUpdate(id, post, { new: true });
     }
 
     async deletePost(id: string): Promise<Post> {
