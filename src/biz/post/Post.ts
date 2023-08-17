@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty, ApiResponseProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsNotEmpty, ValidateNested } from 'class-validator';
-import { Types } from 'mongoose';
+import { BaseModel } from '../base.model';
 
 export class PostTranslationContent {
     @IsNotEmpty()
@@ -33,23 +33,18 @@ export class PostTranslation {
 }
 
 @Schema({ timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } })
-export class Post {
-    @ApiResponseProperty({ type: String })
-    _id?: Types.ObjectId;
-
-    @Prop()
+export class Post extends BaseModel {
+    @ValidateNested()
+    @IsNotEmpty()
+    @Type(() => PostTranslation)
     @ApiResponseProperty({ type: PostTranslation })
+    @ApiProperty()
+    @Prop()
     translation: PostTranslation;
 
     // @Prop()
     // @ApiResponseProperty()
     // status: USER_STATUS;
-
-    @ApiResponseProperty()
-    created_at?: Date;
-
-    @ApiResponseProperty()
-    updated_at?: Date;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

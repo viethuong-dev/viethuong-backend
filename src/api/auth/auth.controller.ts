@@ -13,6 +13,7 @@ import { UserService } from 'src/biz/user/user.service';
 import { AuthUser } from 'src/decorators/authuser.decorator';
 import { LoginDTO, RefreshTokenDTO } from './auth.dto';
 import { tranformUserModelToDTO } from '../user/user.dto';
+import { Public } from 'src/guards/base.guard';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -22,6 +23,7 @@ export class AuthController {
         private authService: AuthService,
     ) {}
 
+    @Public()
     @Post('/login')
     @ApiOkResponse({
         type: Token,
