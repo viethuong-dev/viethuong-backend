@@ -23,12 +23,12 @@ export class AuthController {
         private authService: AuthService,
     ) {}
 
-    @Public()
-    @Post('/login')
     @ApiOkResponse({
         type: Token,
         isArray: false,
     })
+    @Public()
+    @Post('/login')
     async login(@Body() body: LoginDTO) {
         const username = body.username;
         const password = body.password;
@@ -51,6 +51,7 @@ export class AuthController {
         type: Token,
         isArray: false,
     })
+    @Public()
     @Post('/refresh-token')
     async refreshToken(@Body() body: RefreshTokenDTO) {
         const refreshToken = body.refresh_token;
