@@ -1,8 +1,8 @@
 version: '3.8'
 
 services:
-    dev:
-        container_name: nest_server_dev
+    api:
+        container_name: api
         image: nest-server:1.0.0
         build:
             context: .
@@ -11,7 +11,48 @@ services:
         command: npm run start:dev
         ports:
             - 3000:3000
+        expose:
+            - 3000
         volumes:
             - .:/usr/src/app
             - /usr/src/app/node_modules
         restart: unless-stopped
+        env_file: 
+            - ./.env
+
+    nginx_proxy:
+        container_name: nginx_proxy
+        image: nginxproxy/nginx-proxy
+        ports:
+            - 80:80
+            - 443:443
+        volumes:
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+            - vhost:/etc/nginx/vhost.d 
+            - certs:/etc/nginx/certs:ro 
+            - conf:/etc/nginx/conf.d
+            - logs:/var/log/nginx 
+            - html:/usr/share/nginx/html 
+        environment:
+            - ENABLE_IPV6=true
+        privileged: true
+
+    nginx_proxy_acme:
+        container_name: nginx_proxy_acme
+        image: nginxproxy/acme-companion
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro 
+            - acme:/etc/acme.sh
+            - vhost:/etc/nginx/vhost.d
+            - certs:/etc/nginx/certs
+        volumes_from: 
+            - nginx_proxy
+        privileged: true
+
+volumes:
+    vhost:
+    certs:
+    conf:
+    logs:
+    html:
+    acme:
