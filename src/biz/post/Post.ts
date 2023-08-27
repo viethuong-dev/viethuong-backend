@@ -1,17 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ApiProperty, ApiResponseProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsNotEmpty, ValidateNested } from 'class-validator';
 import { BaseModel } from '../base.model';
 
 export class PostTranslationContent {
     @IsNotEmpty()
-    @ApiResponseProperty()
     @ApiProperty()
     title: string;
 
     @IsNotEmpty()
-    @ApiResponseProperty()
     @ApiProperty()
     content: string;
 }
@@ -20,15 +18,13 @@ export class PostTranslation {
     @ValidateNested()
     @IsNotEmpty()
     @Type(() => PostTranslationContent)
-    @ApiResponseProperty()
-    @ApiProperty()
+    @ApiProperty({ type: PostTranslationContent })
     en: PostTranslationContent;
 
     @ValidateNested()
     @IsNotEmpty()
     @Type(() => PostTranslationContent)
-    @ApiResponseProperty()
-    @ApiProperty()
+    @ApiProperty({ type: PostTranslationContent })
     vi: PostTranslationContent;
 }
 
@@ -37,13 +33,11 @@ export class Post extends BaseModel {
     @ValidateNested()
     @IsNotEmpty()
     @Type(() => PostTranslation)
-    @ApiResponseProperty({ type: PostTranslation })
     @ApiProperty()
     @Prop()
     translation: PostTranslation;
 
     // @Prop()
-    // @ApiResponseProperty()
     // status: USER_STATUS;
 }
 

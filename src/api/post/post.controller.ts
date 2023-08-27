@@ -22,14 +22,11 @@ import { Public } from 'src/guards/base.guard';
 export class PostController {
     constructor(private postService: PostService) {}
 
-    @ApiOkResponse({
-        type: PostModel,
-        isArray: false,
-    })
+    @ApiOkResponse({ type: PostModel })
     @Post('/')
     @Roles(Role.ADMIN, Role.CONTENT_STAFF)
     async createPost(@Body() post: PostModel) {
-        return this.postService.createPost(post);
+        return this.postService.create(post);
     }
 
     @ApiOkResponse({
@@ -41,7 +38,7 @@ export class PostController {
     async getPosts(@Query() pagQuery: PaginationKeySeachQuery) {
         pagQuery.offset = pagQuery.offset || 0;
         pagQuery.limit = pagQuery.limit || 20;
-        const [posts, total] = await this.postService.getAndCountPost(pagQuery);
+        const [posts, total] = await this.postService.getAndCount(pagQuery);
         return { posts, total };
     }
 
@@ -70,7 +67,7 @@ export class PostController {
         if (!existedPost) {
             throw new NotFoundException('post not found');
         }
-        return this.postService.updatePost(postId, post);
+        return this.postService.update(postId, post);
     }
 
     @Delete('/:id')
@@ -80,6 +77,6 @@ export class PostController {
         if (!existedPost) {
             throw new NotFoundException('post not found');
         }
-        return this.postService.deletePost(postId);
+        return this.postService.delete(postId);
     }
 }

@@ -22,7 +22,6 @@ export class RolesGuard extends BaseGuard {
         if (!requiredRoles) {
             return true;
         }
-        console.log(requiredRoles);
 
         const { user } = context.switchToHttp().getRequest();
 

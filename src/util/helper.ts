@@ -1,4 +1,4 @@
-export function build_search_object_in_translation(
+export function buildSearchObjectInTranslation(
     keyword: string,
     search_keys: string[],
 ) {

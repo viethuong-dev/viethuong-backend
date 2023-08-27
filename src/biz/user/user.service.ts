@@ -65,9 +65,6 @@ export class UserService {
 
     async resetPasswordUser(userId: string, password: string) {
         const salt = genSaltSync();
-        console.log(salt);
-        console.log(password);
-
         const hashedPassword = this.hashPassword(password, salt);
         await this.updateUser(userId, {
             salt: salt,
