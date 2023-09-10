@@ -47,7 +47,7 @@ export class Product extends BaseModel {
     @Prop()
     image_urls: string[];
 
-    @ApiProperty()
+    @ApiProperty({ enum: STATUS })
     @Prop({ default: STATUS.ACTIVATED })
     status: STATUS;
 
