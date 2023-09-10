@@ -16,7 +16,6 @@ export class PostTranslationContent {
 
 export class PostTranslation {
     @ValidateNested()
-    @IsNotEmpty()
     @Type(() => PostTranslationContent)
     @ApiProperty({ type: PostTranslationContent })
     en: PostTranslationContent;

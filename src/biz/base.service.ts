@@ -3,6 +3,7 @@ import { Model, SortOrder, Types } from 'mongoose';
 import { PaginationKeySeachQuery } from 'src/util/pagination';
 import { buildSearchObjectInTranslation } from 'src/util/helper';
 import { BaseModel } from './base.model';
+import { omitBy, isUndefined } from 'lodash';
 
 @Injectable()
 export class BaseService<M extends BaseModel> {
@@ -14,20 +15,24 @@ export class BaseService<M extends BaseModel> {
         return this.model.create(model);
     }
 
-    async getAndCount(reqQuery: PaginationKeySeachQuery) {
-        let options = {};
-        if (reqQuery.search) {
-            options = buildSearchObjectInTranslation(
-                reqQuery.search,
+    async getAndCount(
+        pagQuery: PaginationKeySeachQuery,
+        otherQuery: object = {},
+    ) {
+        let options: object = omitBy(otherQuery, isUndefined);
+        if (pagQuery.search) {
+            const searchOptions = buildSearchObjectInTranslation(
+                pagQuery.search,
                 this.searchKeys,
             );
+            options = { ...options, ...searchOptions };
         }
         const dbQuery = this.model.find(options);
-        if (reqQuery.sort) {
-            const sortOrder: SortOrder = reqQuery.order === 'asc' ? 1 : -1;
-            dbQuery.sort({ [reqQuery.sort]: sortOrder });
+        if (pagQuery.sort) {
+            const sortOrder: SortOrder = pagQuery.order === 'asc' ? 1 : -1;
+            dbQuery.sort({ [pagQuery.sort]: sortOrder });
         }
-        dbQuery.skip(reqQuery.offset).limit(reqQuery.limit);
+        dbQuery.skip(pagQuery.offset).limit(pagQuery.limit);
         return Promise.all([dbQuery, this.model.count(options)]);
     }
 

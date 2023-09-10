@@ -19,8 +19,12 @@ export class AuthService {
         process.env.ACCESS_TOKEN_SECRET;
     private readonly refreshTokenSecret: string =
         process.env.REFRESH_TOKEN_SECRET;
-    private readonly accessTokenExpriesIn: number = 6 * 60 * 60; //6h
-    private readonly refreshTokenExpriesIn: number = 30 * 24 * 60 * 60; //30d
+    private readonly accessTokenExpireTime: number = parseInt(
+        process.env.ACCESS_TOKEN_EXPIRE_TIME,
+    );
+    private readonly refreshTokenExpireTime: number = parseInt(
+        process.env.REFRESH_TOKEN_EXPIRE_TIME,
+    );
 
     signJWT(payload, expire, key): string {
         const option: JwtSignOptions = {
@@ -55,12 +59,12 @@ export class AuthService {
         return {
             access_token: this.signJWT(
                 payload,
-                this.accessTokenExpriesIn,
+                this.accessTokenExpireTime,
                 this.accessTokenSecret,
             ),
             refresh_token: this.signJWT(
                 payload,
-                this.refreshTokenExpriesIn,
+                this.refreshTokenExpireTime,
                 this.refreshTokenSecret,
             ),
         };
@@ -74,7 +78,7 @@ export class AuthService {
         return {
             access_token: this.signJWT(
                 newPayload,
-                this.accessTokenExpriesIn,
+                this.accessTokenExpireTime,
                 this.accessTokenSecret,
             ),
             refresh_token: refreshToken,
@@ -89,7 +93,7 @@ export class AuthService {
             user_id: userId,
             refresh_token: refreshToken,
             expired_at: new Date(
-                this.refreshTokenExpriesIn * 1000 + new Date().getTime(),
+                this.refreshTokenExpireTime * 1000 + new Date().getTime(),
             ),
         };
         const result = await this.userRefreshTokenModel.create(

@@ -1,9 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ApiProperty, ApiResponseProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsNotEmpty, ValidateNested } from 'class-validator';
-import { Types } from 'mongoose';
 import { BaseModel } from '../base.model';
+import { STATUS } from 'src/constants/status.enum';
 
 export class ProductTranslationContent {
     @IsNotEmpty()
@@ -17,7 +17,6 @@ export class ProductTranslationContent {
 
 export class ProductTranslation {
     @ValidateNested()
-    @IsNotEmpty()
     @Type(() => ProductTranslationContent)
     @ApiProperty({ type: ProductTranslationContent })
     en: ProductTranslationContent;
@@ -31,10 +30,10 @@ export class ProductTranslation {
 
 @Schema({ timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } })
 export class Product extends BaseModel {
-    @ApiResponseProperty({ type: String })
+    // @ApiResponseProperty({ type: String })
     @ApiProperty()
     @Prop()
-    category_id: Types.ObjectId;
+    category_id: string;
 
     @ApiProperty({ type: ProductTranslation })
     @Prop()
@@ -48,7 +47,11 @@ export class Product extends BaseModel {
     @Prop()
     image_urls: string[];
 
-    // @ApiResponseProperty({ type: Category })
+    @ApiProperty()
+    @Prop({ default: STATUS.ACTIVATED })
+    status: STATUS;
+
+    // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Category' })
     // category: Category;
 }
 

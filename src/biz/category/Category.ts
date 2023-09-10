@@ -9,14 +9,13 @@ export class CategoryTranslationContent {
     @ApiProperty()
     title: string;
 
-    @IsNotEmpty()
-    @ApiProperty()
-    description: string;
+    // @IsNotEmpty()
+    // @ApiProperty()
+    // description: string;
 }
 
 export class CategoryTranslation {
     @ValidateNested()
-    @IsNotEmpty()
     @Type(() => CategoryTranslationContent)
     @ApiProperty({ type: CategoryTranslationContent })
     en: CategoryTranslationContent;

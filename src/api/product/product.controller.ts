@@ -18,6 +18,7 @@ import { PaginationKeySeachQuery } from 'src/util/pagination';
 import { Product as ProductModel } from 'src/biz/product/Product';
 import { Public } from 'src/guards/base.guard';
 import { CategoryService } from 'src/biz/category/category.service';
+import { STATUS } from 'src/constants/status.enum';
 
 @ApiTags('product')
 @Controller('product')
@@ -55,11 +56,16 @@ export class ProductController {
     })
     @Public()
     @Get('/')
-    async getProducts(@Query() pagQuery: PaginationKeySeachQuery) {
+    async getProducts(
+        @Query() pagQuery: PaginationKeySeachQuery,
+        @Query('category_id') categoryId: string,
+        @Query('status') status: STATUS = STATUS.ACTIVATED,
+    ) {
         pagQuery.offset = pagQuery.offset || 0;
         pagQuery.limit = pagQuery.limit || 20;
         const [products, total] = await this.productService.getAndCount(
             pagQuery,
+            { category_id: categoryId, status: status },
         );
         return { products, total };
     }
